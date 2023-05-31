@@ -187,6 +187,13 @@ def change_font():
     weekly_weather_btn.config(font=font_style)
     weekly_weather_list.config(font=font_style)
     weather_plot_btn.config(font=font_style)
+    search_btn.config(font=font_style)
+    save_btn.config(font=font_style)
+    compare_btn.config(font=font_style)
+    font_label.config(font=font_style)
+    font_menu.config(font=font_style)
+    font_size_scale.config(font=font_style)
+    font_apply_btn.config(font=font_style)
 
 # Создаем объект приложения
 app = Tk()
@@ -207,7 +214,7 @@ background_label.place(x=0, y=0, relwidth=1, relheight=1)
 city_text = Entry(app, font=("Arial", 14), width=20)
 city_text.pack(pady=20)
 
-search_btn = Button(app, text="Поиск", font=("Arial", 14), command=search)
+search_btn = Button(app, text="Поиск", font=("Arial", 14), command=search, relief=FLAT, bd=0, bg="#337ab7", fg="white")
 search_btn.pack()
 
 location_lbl = Label(app, text="", font=("Arial", 20))
@@ -222,19 +229,19 @@ weather_l.pack(pady=20)
 weather_image_label = Label(app)
 weather_image_label.pack(pady=10)
 
-weekly_weather_btn = Button(app, text="Погода на неделю", font=("Arial", 14), command=get_weekly_weather_info)
+weekly_weather_btn = Button(app, text="Погода на неделю", font=("Arial", 14), command=get_weekly_weather_info, relief=FLAT, bd=0, bg="#337ab7", fg="white")
 weekly_weather_btn.pack()
 
 weekly_weather_list = Listbox(app, width=80, height=10, font=("Arial", 12))
 weekly_weather_list.pack(pady=20)
 
-weather_plot_btn = Button(app, text="График погоды", font=("Arial", 14), command=show_weather_plot)
+weather_plot_btn = Button(app, text="График погоды", font=("Arial", 14), command=show_weather_plot, relief=FLAT, bd=0, bg="#337ab7", fg="white")
 weather_plot_btn.pack()
 
-save_btn = Button(app, text="Сохранить", font=("Arial", 14), command=save_weather)
+save_btn = Button(app, text="Сохранить", font=("Arial", 14), command=save_weather, relief=FLAT, bd=0, bg="#337ab7", fg="white")
 save_btn.pack(side=LEFT, padx=10)
 
-compare_btn = Button(app, text="Сравнить", font=("Arial", 14), command=compare_weather)
+compare_btn = Button(app, text="Сравнить", font=("Arial", 14), command=compare_weather, relief=FLAT, bd=0, bg="#337ab7", fg="white")
 compare_btn.pack(side=LEFT, padx=10)
 
 font_label = Label(app, text="Выберите шрифт и размер", font=("Arial", 14))
@@ -249,7 +256,7 @@ font_size_scale = Scale(app, from_=10, to=30, orient=HORIZONTAL, resolution=1)
 font_size_scale.set(14)  # Значение по умолчанию
 font_size_scale.pack(pady=10)
 
-font_apply_btn = Button(app, text="Применить шрифт", font=("Arial", 14), command=change_font)
+font_apply_btn = Button(app, text="Применить шрифт", font=("Arial", 14), command=change_font, relief=FLAT, bd=0, bg="#337ab7", fg="white")
 font_apply_btn.pack()
 
 # Запускаем главный цикл приложения
