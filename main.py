@@ -195,6 +195,14 @@ def change_font():
     font_size_scale.config(font=font_style)
     font_apply_btn.config(font=font_style)
 
+def on_mousewheel(event):
+    canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+
+def change_colors():
+    bg_color = bg_color_entry.get()
+    fg_color = fg_color_entry.get()
+    app.config(bg=bg_color, fg=fg_color)
+
 # Создаем объект приложения
 app = Tk()
 # Устанавливаем заголовок
@@ -202,62 +210,87 @@ app.title("Погодное приложение")
 # Задаем размер окна
 app.geometry("600x500")
 
-# Загрузка фонового изображения
-background_image_path = 'C:/Users/decop/PycharmProjects/000/background.jpg'
-background_image = Image.open(background_image_path)
-background_image = background_image.resize((600, 500), Image.ANTIALIAS)
-background_photo = ImageTk.PhotoImage(background_image)
-background_label = Label(app, image=background_photo)
-background_label.place(x=0, y=0, relwidth=1, relheight=1)
-
 # Создаем элементы интерфейса
-city_text = Entry(app, font=("Arial", 14), width=20)
+main_frame = Frame(app)
+main_frame.pack(fill=BOTH, expand=1)
+
+# Добавляем возможность скроллинга
+canvas = Canvas(main_frame)
+canvas.pack(side=LEFT, fill=BOTH, expand=1)
+
+scrollbar = Scrollbar(main_frame, orient=VERTICAL, command=canvas.yview)
+scrollbar.pack(side=RIGHT, fill=Y)
+
+canvas.configure(yscrollcommand=scrollbar.set)
+canvas.bind_all("<MouseWheel>", on_mousewheel)
+
+content_frame = Frame(canvas)
+canvas.create_window((0, 0), window=content_frame, anchor="nw")
+
+city_text = Entry(content_frame, font=("Arial", 14), width=20)
 city_text.pack(pady=20)
 
-search_btn = Button(app, text="Поиск", font=("Arial", 14), command=search, relief=FLAT, bd=0, bg="#337ab7", fg="white")
+search_btn = Button(content_frame, text="Поиск", font=("Arial", 14), command=search)
 search_btn.pack()
 
-location_lbl = Label(app, text="", font=("Arial", 20))
+location_lbl = Label(content_frame, text="", font=("Arial", 20))
 location_lbl.pack(pady=20)
 
-temperature_label = Label(app, text="", font=("Arial", 20))
+temperature_label = Label(content_frame, text="", font=("Arial", 20))
 temperature_label.pack(pady=20)
 
-weather_l = Label(app, text="", font=("Arial", 20))
+weather_l = Label(content_frame, text="", font=("Arial", 20))
 weather_l.pack(pady=20)
 
-weather_image_label = Label(app)
+weather_image_label = Label(content_frame)
 weather_image_label.pack(pady=10)
 
-weekly_weather_btn = Button(app, text="Погода на неделю", font=("Arial", 14), command=get_weekly_weather_info, relief=FLAT, bd=0, bg="#337ab7", fg="white")
+weekly_weather_btn = Button(content_frame, text="Погода на неделю", font=("Arial", 14), command=get_weekly_weather_info)
 weekly_weather_btn.pack()
 
-weekly_weather_list = Listbox(app, width=80, height=10, font=("Arial", 12))
+weekly_weather_list = Listbox(content_frame, width=80, height=10, font=("Arial", 12))
 weekly_weather_list.pack(pady=20)
 
-weather_plot_btn = Button(app, text="График погоды", font=("Arial", 14), command=show_weather_plot, relief=FLAT, bd=0, bg="#337ab7", fg="white")
+weather_plot_btn = Button(content_frame, text="График погоды", font=("Arial", 14), command=show_weather_plot)
 weather_plot_btn.pack()
 
-save_btn = Button(app, text="Сохранить", font=("Arial", 14), command=save_weather, relief=FLAT, bd=0, bg="#337ab7", fg="white")
+save_btn = Button(content_frame, text="Сохранить", font=("Arial", 14), command=save_weather)
 save_btn.pack(side=LEFT, padx=10)
 
-compare_btn = Button(app, text="Сравнить", font=("Arial", 14), command=compare_weather, relief=FLAT, bd=0, bg="#337ab7", fg="white")
+compare_btn = Button(content_frame, text="Сравнить", font=("Arial", 14), command=compare_weather)
 compare_btn.pack(side=LEFT, padx=10)
 
-font_label = Label(app, text="Выберите шрифт и размер", font=("Arial", 14))
+font_label = Label(content_frame, text="Выберите шрифт и размер", font=("Arial", 14))
 font_label.pack(pady=10)
 
 font_option = StringVar()
 font_option.set("Arial")  # Значение по умолчанию
-font_menu = OptionMenu(app, font_option, "Arial", "Times New Roman", "Verdana", "Courier New")
+font_menu = OptionMenu(content_frame, font_option, "Arial", "Times New Roman", "Verdana", "Courier New")
 font_menu.pack()
 
-font_size_scale = Scale(app, from_=10, to=30, orient=HORIZONTAL, resolution=1)
+font_size_scale = Scale(content_frame, from_=10, to=30, orient=HORIZONTAL, resolution=1)
 font_size_scale.set(14)  # Значение по умолчанию
 font_size_scale.pack(pady=10)
 
-font_apply_btn = Button(app, text="Применить шрифт", font=("Arial", 14), command=change_font, relief=FLAT, bd=0, bg="#337ab7", fg="white")
+font_apply_btn = Button(content_frame, text="Применить шрифт", font=("Arial", 14), command=change_font)
 font_apply_btn.pack()
+
+bg_color_label = Label(content_frame, text="Цвет фона:", font=("Arial", 12))
+bg_color_label.pack(pady=10)
+
+bg_color_entry = Entry(content_frame, font=("Arial", 12), width=10)
+bg_color_entry.pack()
+
+fg_color_label = Label(content_frame, text="Цвет текста:", font=("Arial", 12))
+fg_color_label.pack(pady=10)
+
+fg_color_entry = Entry(content_frame, font=("Arial", 12), width=10)
+fg_color_entry.pack()
+
+change_colors_btn = Button(content_frame, text="Изменить цвета", font=("Arial", 12), command=change_colors, relief=FLAT, bd=0, bg="#337ab7", fg="white")
+change_colors_btn.pack(pady=10)
+
+content_frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
 
 # Запускаем главный цикл приложения
 app.mainloop()
