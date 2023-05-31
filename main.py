@@ -15,6 +15,8 @@ api_key = config.get('weather', 'api')
 url = 'http://api.openweathermap.org/data/2.5/weather?q={}&appid={}'
 weekly_url = 'http://api.openweathermap.org/data/2.5/forecast?q={}&appid={}'
 
+saved_weather = []  # Список для сохранения данных о погоде и температуре
+
 # Явная функция для получения информации о погоде
 def get_weather(city):
     result = requests.get(url.format(city, api_key))
@@ -82,6 +84,35 @@ def plot_weather(city):
 def show_weather_plot():
     city = city_text.get()
     plot_weather(city)
+
+# Явная функция для сохранения данных о погоде и температуре
+def save_weather():
+    city = city_text.get()
+    weather = get_weather(city)
+    if weather:
+        saved_weather.append(weather)
+        messagebox.showinfo('Сохранение', f'Информация о погоде в городе {city} сохранена!\nТемпература: {weather[3]} градусов Цельсия')
+    else:
+        messagebox.showerror('Ошибка', "Невозможно сохранить информацию о погоде для {}".format(city))
+
+# Явная функция для сравнения сохраненных данных о погоде
+def compare_weather():
+    if len(saved_weather) < 2:
+        messagebox.showerror('Ошибка', "Недостаточно сохраненных данных о погоде для сравнения!")
+        return
+
+    city = city_text.get()
+    current_weather = get_weather(city)
+    if current_weather:
+        weather_info = f'Текущая погода в городе {city}:\nТемпература: {current_weather[3]} градусов Цельсия\nПогода: {current_weather[4]}\n\n'
+    else:
+        weather_info = f'Текущая погода в городе {city}: Нет данных\n\n'
+
+    compare_info = 'Сравнение с сохраненными данными:\n\n'
+    for weather in saved_weather:
+        compare_info += f'Город: {weather[0]}\nТемпература: {weather[3]} градусов Цельсия\nПогода: {weather[4]}\n\n'
+
+    messagebox.showinfo('Сравнение', weather_info + compare_info)
 
 # Явная функция для поиска города
 def search():
@@ -199,6 +230,12 @@ weekly_weather_list.pack(pady=20)
 
 weather_plot_btn = Button(app, text="График погоды", font=("Arial", 14), command=show_weather_plot)
 weather_plot_btn.pack()
+
+save_btn = Button(app, text="Сохранить", font=("Arial", 14), command=save_weather)
+save_btn.pack(side=LEFT, padx=10)
+
+compare_btn = Button(app, text="Сравнить", font=("Arial", 14), command=compare_weather)
+compare_btn.pack(side=LEFT, padx=10)
 
 font_label = Label(app, text="Выберите шрифт и размер", font=("Arial", 14))
 font_label.pack(pady=10)
