@@ -1,0 +1,2 @@
+[weather]
+api = 9589110552342009d56bef1e6efd10de
